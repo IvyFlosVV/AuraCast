@@ -1,0 +1,12 @@
+# Local environment and secrets — never commit
+.env
+.env.local
+.env.*.local
+
+uploads/
+output/
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.mp3

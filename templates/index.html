@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuraCast — eBook to Podcast</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1 class="hero__title">AuraCast</h1>
+      <p class="hero__subtitle">Upload an eBook and get a two-host AI podcast of its summary and highlights.</p>
+    </header>
+
+    <section class="upload" aria-labelledby="upload-heading">
+      <h2 id="upload-heading" class="sr-only">Upload eBook</h2>
+      <form id="upload-form" class="upload-form" enctype="multipart/form-data">
+        <label class="upload__label" for="file-input">
+          <span class="upload__label-text">Choose PDF or EPUB</span>
+          <input id="file-input" type="file" name="file" accept=".pdf,.epub" required class="upload__input" />
+        </label>
+        <button type="submit" id="submit-btn" class="btn btn--primary">Generate podcast</button>
+      </form>
+    </section>
+
+    <section class="states" aria-live="polite" aria-atomic="true">
+      <div id="state-strip" class="state-strip" data-state="idle" hidden>
+        <div class="state-strip__steps">
+          <div class="state-step" data-step="uploading">
+            <span class="state-step__icon" aria-hidden="true"></span>
+            <span class="state-step__label">Uploading</span>
+          </div>
+          <div class="state-step" data-step="parsing">
+            <span class="state-step__icon" aria-hidden="true"></span>
+            <span class="state-step__label">Parsing text</span>
+          </div>
+          <div class="state-step" data-step="generating_script">
+            <span class="state-step__icon" aria-hidden="true"></span>
+            <span class="state-step__label">Generating script</span>
+          </div>
+          <div class="state-step" data-step="synthesizing">
+            <span class="state-step__icon" aria-hidden="true"></span>
+            <span class="state-step__label">Synthesizing audio</span>
+          </div>
+          <div class="state-step" data-step="ready">
+            <span class="state-step__icon" aria-hidden="true"></span>
+            <span class="state-step__label">Ready</span>
+          </div>
+        </div>
+        <p id="state-message" class="state-message"></p>
+      </div>
+    </section>
+
+    <section id="error-panel" class="panel panel--error" hidden aria-live="assertive">
+      <p id="error-message" class="error-message"></p>
+      <button type="button" id="dismiss-error" class="btn btn--secondary">Dismiss</button>
+    </section>
+
+    <section id="result-panel" class="panel result-panel" hidden>
+      <div class="result-panel__player">
+        <h2 class="result-panel__heading">Listen</h2>
+        <audio id="audio-player" class="audio-player" controls preload="metadata"></audio>
+      </div>
+      <div class="result-panel__script">
+        <h2 class="result-panel__heading">Script</h2>
+        <div id="script-content" class="script-content"></div>
+      </div>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
