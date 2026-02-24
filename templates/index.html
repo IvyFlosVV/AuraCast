@@ -7,6 +7,21 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
+  <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light or dark theme" title="Toggle theme">
+    <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">☀</span>
+    <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+  </button>
+
+  <div class="app-layout">
+  <aside id="history-sidebar" class="history-sidebar" aria-label="Generate history">
+    <div class="history-sidebar__header">
+      <h2 class="history-sidebar__title">History</h2>
+      <button type="button" id="history-close" class="history-close" aria-label="Close history">×</button>
+    </div>
+    <ul id="history-list" class="history-list"></ul>
+    <p id="history-empty" class="history-empty">No past generations yet.</p>
+  </aside>
+  <button type="button" id="history-toggle" class="history-toggle" aria-label="Open history" title="History">📋</button>
   <main class="page">
     <header class="hero">
       <h1 class="hero__title">AuraCast</h1>
@@ -17,38 +32,40 @@
       <h2 id="upload-heading" class="sr-only">Upload eBook</h2>
       <form id="upload-form" class="upload-form" enctype="multipart/form-data">
         <label class="upload__label" for="file-input">
-          <span class="upload__label-text">Choose PDF or EPUB</span>
+          <span class="upload__label-text" id="label-text">Choose PDF or EPUB</span>
+          <span id="selected-file-display" class="upload__file-display" aria-live="polite">
+            <span class="upload__file-icon" aria-hidden="true"></span>
+            <span id="selected-filename" class="upload__filename"></span>
+          </span>
           <input id="file-input" type="file" name="file" accept=".pdf,.epub" required class="upload__input" />
         </label>
+
+        <div class="settings-row">
+          <div class="setting">
+            <label for="setting-language" class="setting__label">Language</label>
+            <select id="setting-language" class="setting__select" name="language">
+              <option value="auto">Auto-detect</option>
+              <option value="en">English</option>
+              <option value="zh">Chinese</option>
+            </select>
+          </div>
+          <div class="setting">
+            <label for="setting-vibe" class="setting__label">Podcast Vibe</label>
+            <select id="setting-vibe" class="setting__select" name="vibe">
+              <option value="analytical">Deep Analytical</option>
+              <option value="casual">Casual Banter</option>
+            </select>
+          </div>
+        </div>
+
         <button type="submit" id="submit-btn" class="btn btn--primary">Generate podcast</button>
       </form>
     </section>
 
-    <section class="states" aria-live="polite" aria-atomic="true">
-      <div id="state-strip" class="state-strip" data-state="idle" hidden>
-        <div class="state-strip__steps">
-          <div class="state-step" data-step="uploading">
-            <span class="state-step__icon" aria-hidden="true"></span>
-            <span class="state-step__label">Uploading</span>
-          </div>
-          <div class="state-step" data-step="parsing">
-            <span class="state-step__icon" aria-hidden="true"></span>
-            <span class="state-step__label">Parsing text</span>
-          </div>
-          <div class="state-step" data-step="generating_script">
-            <span class="state-step__icon" aria-hidden="true"></span>
-            <span class="state-step__label">Generating script</span>
-          </div>
-          <div class="state-step" data-step="synthesizing">
-            <span class="state-step__icon" aria-hidden="true"></span>
-            <span class="state-step__label">Synthesizing audio</span>
-          </div>
-          <div class="state-step" data-step="ready">
-            <span class="state-step__icon" aria-hidden="true"></span>
-            <span class="state-step__label">Ready</span>
-          </div>
-        </div>
-        <p id="state-message" class="state-message"></p>
+    <section id="progress-section" class="progress-section" hidden aria-live="polite">
+      <p id="progress-status" class="progress-status">Extracting text from eBook...</p>
+      <div class="progress-track">
+        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
       </div>
     </section>
 
@@ -63,11 +80,16 @@
         <audio id="audio-player" class="audio-player" controls preload="metadata"></audio>
       </div>
       <div class="result-panel__script">
-        <h2 class="result-panel__heading">Script</h2>
-        <div id="script-content" class="script-content"></div>
+        <h2 class="result-panel__heading">Conversation</h2>
+        <div id="script-content" class="script-content chat" role="log" aria-live="polite"></div>
       </div>
     </section>
+
+    <footer class="footer">
+      <p class="footer__text">Designed &amp; Built by Ivy | Powered by Gemini 1.5 Pro &amp; Edge-TTS</p>
+    </footer>
   </main>
+  </div>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
