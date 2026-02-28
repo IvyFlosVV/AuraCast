@@ -6,7 +6,7 @@ I built this project for my CMU 15-113 class because I wanted a more engaging wa
 
 It doesn't just read the book out loud—it analyzes the text, generates a conversational script between two distinct AI personalities, and lets you interrupt them to ask questions in real-time. 
 
-**[Try the Live App Here](https://auracast.onrender.com)**
+**[Try the Live App Here](https://auracast-vf1k.onrender.com)**
 
 ---
 
