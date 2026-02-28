@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AuraCast — eBook to Podcast</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    :root { --bg-image: url("{{ url_for('serve_bg', name='dark_bg') }}"); }
+    [data-theme="light"] { --bg-image: url("{{ url_for('serve_bg', name='light_bg') }}"); }
+  </style>
 </head>
 <body>
   <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light or dark theme" title="Toggle theme">
@@ -58,8 +62,20 @@
           </div>
         </div>
 
-        <button type="submit" id="submit-btn" class="btn btn--primary">Generate podcast</button>
+        <button type="submit" id="submit-btn" class="btn btn--primary">Parse book</button>
+        <p class="upload__demo-hint">Never seen it work? <button type="button" id="try-demo-btn" class="upload__demo-link">Try demo</button> — no book or API needed.</p>
       </form>
+    </section>
+
+    <section id="episode-explorer" class="episode-explorer panel" hidden aria-labelledby="episode-explorer-heading">
+      <h2 id="episode-explorer-heading" class="episode-explorer__heading">Episodes</h2>
+      <p id="episode-explorer-hint" class="episode-explorer__hint">Select an episode to generate its podcast.</p>
+      <ul id="episode-list" class="episode-list" role="list"></ul>
+      <div id="episode-selected-block" class="episode-selected" hidden>
+        <label for="episode-prompt" class="episode-prompt__label">What should the hosts focus on in this chapter?</label>
+        <textarea id="episode-prompt" class="episode-prompt__input" name="episode-prompt" rows="2" placeholder="e.g. Analyze the symbolism of the rose"></textarea>
+        <button type="button" id="generate-episode-btn" class="btn btn--primary">Generate Episode</button>
+      </div>
     </section>
 
     <section id="progress-section" class="progress-section" hidden aria-live="polite">
@@ -75,9 +91,18 @@
     </section>
 
     <section id="result-panel" class="panel result-panel" hidden>
+      <p id="result-episode-title" class="result-panel__episode-title" hidden></p>
       <div class="result-panel__player">
         <h2 class="result-panel__heading">Listen</h2>
         <audio id="audio-player" class="audio-player" controls preload="metadata"></audio>
+        <div id="interrupt-block" class="interrupt-block" hidden>
+          <button type="button" id="interrupt-btn" class="btn btn--interrupt" aria-label="Interrupt and ask the hosts a question">✋ Interrupt & Ask</button>
+          <div id="interrupt-ask-form" class="interrupt-ask-form" hidden>
+            <label for="interrupt-question" class="sr-only">Ask the hosts a question about what they just said</label>
+            <input type="text" id="interrupt-question" class="interrupt-question__input" placeholder="Ask the hosts a question about what they just said..." />
+            <button type="button" id="interrupt-ask-submit" class="btn btn--primary">Ask</button>
+          </div>
+        </div>
       </div>
       <div class="result-panel__script">
         <h2 class="result-panel__heading">Conversation</h2>
