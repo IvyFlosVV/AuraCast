@@ -1,4 +1,6 @@
-# Place theme background images here (committed to git for Render/deployment):
-#   dark_bg.png   - dark theme background
-#   light_bg.png  - light theme background
-# Use exact lowercase names; Linux is case-sensitive.
+# Add your theme background images here (required for background to show):
+#
+#   dark_bg.png   (or .jpg / .jpeg / .webp) — dark theme
+#   light_bg.png (or .jpg / .jpeg / .webp) — light theme
+#
+# Use lowercase names (e.g. dark_bg.png). Commit these files so they deploy on Render.

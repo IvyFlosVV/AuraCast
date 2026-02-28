@@ -6,9 +6,9 @@
   <title>AuraCast — eBook to Podcast</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <style>
-    /* Theme backgrounds from /static/images/ (deployed with app; use lowercase filenames on Linux) */
-    :root { --bg-image: url("{{ url_for('static', filename='images/dark_bg.png') }}"); }
-    [data-theme="light"] { --bg-image: url("{{ url_for('static', filename='images/light_bg.png') }}"); }
+    /* Theme backgrounds: /bg/<name> serves from static/images/ (use dark_bg.* and light_bg.*; Linux is case-sensitive) */
+    :root { --bg-image: url("{{ url_for('serve_bg', name='dark_bg') }}"); }
+    [data-theme="light"] { --bg-image: url("{{ url_for('serve_bg', name='light_bg') }}"); }
   </style>
 </head>
 <body>

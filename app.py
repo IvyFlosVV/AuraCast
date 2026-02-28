@@ -286,20 +286,21 @@ def serve_output(filename):
     return send_from_directory(config.OUTPUT_FOLDER, filename, mimetype="audio/mpeg")
 
 
-# Allowed background image names (from uploads folder)
+# Theme backgrounds: served from static/images/ (deployed with app; supports .png, .jpg, .webp)
 BG_NAMES = {"dark", "light", "dark_bg", "light_bg"}
 BG_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp")
+STATIC_IMAGES = Path(__file__).resolve().parent / "static" / "images"
 
 
 @app.route("/bg/<name>")
 def serve_bg(name):
-    """Serve theme background image from uploads (e.g. dark.png, light.jpg)."""
+    """Serve theme background from static/images/ so it works on Render (tries .png, .jpg, .webp)."""
     if name not in BG_NAMES:
         return "", 404
     for ext in BG_EXTENSIONS:
-        path = config.UPLOAD_FOLDER / f"{name}{ext}"
+        path = STATIC_IMAGES / f"{name}{ext}"
         if path.is_file():
-            return send_from_directory(config.UPLOAD_FOLDER, path.name)
+            return send_from_directory(STATIC_IMAGES, path.name)
     return "", 404
 
 
