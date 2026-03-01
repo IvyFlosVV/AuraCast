@@ -1,0 +1,60 @@
+# AuraCast — conversation history
+
+Summary of key product and implementation decisions from development conversations.
+(Conversations about temporarily hardcoding mocks for demos are omitted.)
+
+---
+
+## 1. Delete search history individually
+
+**Request:** Allow deleting history entries one by one. On hover over a history bubble:
+- Make the bubble red (same style as the error state).
+- Show a cross (×) on the right.
+- Clicking the cross removes that single history entry and updates the list.
+
+**Implementation:**
+- script.js: Added removeFromHistory(id), and in renderHistory() each item gets a delete button with data-history-id. Single click listener on the history list (event delegation) calls removeFromHistory and stopPropagation.
+- style.css: .history-list__item uses flex layout; :hover applies red/error background (rgba(248,113,113,0.25), border-color var(--color-error)). .history-list__delete is a × button, opacity 0 by default, opacity 1 on row hover; hover/focus styles for accessibility.
+
+---
+
+## 2. Try Demo button styling
+
+**Request:** The "Try Demo" button looked too prominent. Desired behavior:
+- Only boldface "Try demo" and underline it (no big button look).
+- On hover, use a color that contrasts with the background.
+- Remain clickable and trigger the demo.
+
+**Implementation:**
+- templates/index.html: Replaced button classes with a single class upload__demo-link (no btn/btn--secondary).
+- style.css: .upload__demo-link — no padding/border/background, font-weight 700, text-decoration underline, color from --color-text-muted. :hover uses --color-host-a for contrast. :focus has a visible outline for keyboard users. Still a <button> for semantics and accessibility.
+
+---
+
+## 3. Background image not loading on Render (production)
+
+**Request:** Background image works locally on Mac but not on Render (Linux). Fix the file path so it works in Flask production (e.g. robust path like /static/), and consider case-sensitivity and Git commits.
+
+**Findings:** The template was using url_for('serve_bg', name='dark_bg'), which served from the uploads/ folder. uploads/ is in .gitignore, so those files are never deployed to Render.
+
+**Implementation:**
+- Switched theme backgrounds to be served from static/images/ (inside the repo) so they deploy with the app.
+- app.py: serve_bg now reads from STATIC_IMAGES = Path(__file__).resolve().parent / "static" / "images", with extension fallback (.png, .jpg, .jpeg, .webp). Template uses url_for('serve_bg', name='dark_bg') and url_for('serve_bg', name='light_bg').
+- User must add image files to static/images/: dark_bg.* and light_bg.* (e.g. dark_bg.png, light_bg.png), using lowercase names for Linux case-sensitivity, and commit + push so they deploy.
+
+---
+
+## 4. Background still not showing (follow-up)
+
+**Request:** Background still not working after the path change.
+
+**Findings:** static/images/ contained only .gitkeep — no actual image files. So requests to /static/images/dark_bg.png (or the /bg/ route before we fixed it) returned 404.
+
+**Implementation:**
+- Confirmed serve_bg reads from static/images/ with multiple extensions.
+- Template uses serve_bg again so one URL works for any supported extension.
+- Updated static/images/.gitkeep into a short README: add dark_bg.* and light_bg.* here, lowercase names, and commit the files for Render.
+
+---
+
+End of prompt history.
